@@ -1,0 +1,5 @@
+observations/
+observation_videos/
+module_saves/
+model_saves/
+__pycache__/
