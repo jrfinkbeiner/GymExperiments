@@ -69,12 +69,12 @@ class Reinforce(ABC):
         if state is None:
             state = self.env.reset()
         
-        states = [state.transpose(2,0,1)]
+        states = [state]
         rewards = []
         actions = []
         for _ in range(max_len):
             state = states[-1]
-            action, _, _ = self.get_action(torch.tensor(state.copy(), dtype=torch.float32).unsqueeze(dim=0)/255.) # TODO copy is shit!
+            action, _, _ = self.get_action(torch.tensor(state.copy().transpose(2,0,1), dtype=torch.float32).unsqueeze(dim=0)/255.) # TODO copy is shit!
             # print()
             # print(action)
             # print(type(action))
@@ -82,7 +82,7 @@ class Reinforce(ABC):
             # print()
             state, reward, done, _ = self.env.step(action)
             
-            states.append(state.transpose(2,0,1)) 
+            states.append(state) 
             rewards.append(reward)
             actions.append(action)
 
@@ -156,7 +156,7 @@ class ContinousReinforce(Reinforce):
 
         # sys.exit()
         action = action_distr.copy()
-        action[0] = action[0]*2-1
+        action[0] = (action[0]-0.5)*2
         return action
 
     def convert_from_action_space(self, action: torch.Tensor):
@@ -169,7 +169,7 @@ class ContinousReinforce(Reinforce):
         with torch.no_grad():
             out0, out1, representation, repr_var = self.model(state)
             
-            distribution = self.distribution(out0, out1)
+            distribution = self.distribution(out0, out1*0.5)
 
             if mode:
                 action_distr = self.get_mode(distribution)
@@ -190,7 +190,7 @@ class ContinousReinforce(Reinforce):
         self.optimizer.zero_grad()
 
         # cast everything into torch tensors
-        states = torch.tensor(states[:-1], dtype=torch.float32)/255
+        states = torch.tensor(states[:-1], dtype=torch.float32).permute(0,3,1,2)/255
         actions = self.convert_from_action_space(torch.tensor(actions, dtype=torch.float32))
         cumulative_returns = np.array(rl_util.get_cumulative_rewards(rewards, self.gamma))
         cumulative_returns = torch.tensor(cumulative_returns, dtype=torch.float32).unsqueeze(dim=1)
@@ -205,6 +205,10 @@ class ContinousReinforce(Reinforce):
 
         distr = self.distribution(out0, out1)
 
+        log_probs = distr.log_prob(actions)
+        print("log_probs: ", torch.min(log_probs).item(), torch.mean(log_probs).item(), torch.max(log_probs).item(), torch.var(log_probs).item())
+        print("cum_ret: ", torch.min(cumulative_returns).item(), torch.mean(cumulative_returns).item(), torch.max(cumulative_returns).item(), torch.var(cumulative_returns).item())
+        print("actions: ", torch.min(actions, dim=0)[0], torch.mean(actions, dim=0), torch.max(actions, dim=0)[0], torch.var(actions, dim=0))
         loss_policy = -torch.sum(distr.log_prob(actions) * cumulative_returns)
         loss_entropy = -torch.sum(distr.entropy())
 

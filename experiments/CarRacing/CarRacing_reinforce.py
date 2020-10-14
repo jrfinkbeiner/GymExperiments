@@ -50,6 +50,10 @@ def main():
 
     env = gym.make('CarRacing-v0')
 
+
+    # env.reset()
+    # env.reset()
+
     # print(env.action_space.high)
     # print(env.action_space.low)
     # sys.exit()
@@ -59,27 +63,25 @@ def main():
 
 
     model = set_up_repr_dualhead_from_pixels(encoder, encoder_out_dim=representation_dim, out_dim=3)
-    optimizer = torch.optim.Adam(module_vae.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(module_vae.parameters(), lr=1e-4)
 
     reinforce = ContinousReinforce(
         env=env,
         model=model,
         optimizer=optimizer,
-        gamma=0.99, 
-        distribution="Beta",
+        gamma=0.98, 
+        distribution="Normal",
         decoder=decoder,
         latent_represantation=True,
     )
         
-
-
     rewards = train_reinforce(
-        num_epochs=25,
+        num_epochs=10000,
         reinforce=reinforce,
-        dir_name="./module_saves/carracing/reinforce/try1/",
-        
+        dir_name="./module_saves/carracing/reinforce/Normal10k/",
+        save_ith_epoch=10,
+        save_videos=True,        
     )
-
 
     print(rewards)
     plt.figure()

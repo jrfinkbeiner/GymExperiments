@@ -44,11 +44,11 @@ def set_up_repr_dualhead_from_pixels(
     # if encoder is None:
     #     encoder = ...
     if middle is None:
-        middle = MLP([nn.ReLU(), nn.ReLU()], [encoder_out_dim, 128, 64])
+        middle = MLP([nn.ReLU()], [encoder_out_dim, 64])
     if head0 is None:
         head0 = MLP([nn.ReLU(), nn.Sigmoid()], [64, 32, out_dim])
     if head1 is None:
-        head1 = MLP([nn.ReLU(), nn.Sigmoid()], [64, 32, out_dim])
+        head1 = MLP([nn.ReLU(), nn.Softplus()], [64, 32, out_dim])
     # if head0 is None:
     #     head0 = MLP([nn.ReLU(), nn.Tanh(), lambda x: x], [64, 32, out_dim, out_dim])
     # if head1 is None:

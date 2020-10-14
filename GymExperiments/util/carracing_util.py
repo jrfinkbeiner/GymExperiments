@@ -4,16 +4,15 @@ import torch
 from cv2 import VideoWriter, VideoWriter_fourcc
 
 
-def create_video(filename, observations):
+def create_video(filename, observations, fps: int = 24):
 
     width = 96
     height = 96
-    FPS = 24
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     fourcc = VideoWriter_fourcc(*'MP42')
-    video = VideoWriter(filename, fourcc, float(FPS), (width, height))
+    video = VideoWriter(filename, fourcc, float(fps), (width, height))
 
     for obervation in observations:
         frame = obervation.astype(np.uint8)
