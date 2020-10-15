@@ -4,7 +4,7 @@ import gym
 import matplotlib.pyplot as plt
 
 from GymExperiments.architectures import instaniate_SimpleCNNVAE
-from carracing_util import load_observations, create_video
+from GymExperiments.util.carracing_util import load_observations, create_video
 
 
 
@@ -28,7 +28,7 @@ def gernerate_random_observations(env, num_rollouts, rollout_length):
 
     observations_dir = "./observations/startGas"
     os.makedirs(observations_dir, exist_ok=True)
-    np.save(os.path.join(observations_dir, f"observations_startGas_nroll{num_rollouts}_lroll{rollout_length}_000001"), observations)
+    np.save(os.path.join(observations_dir, f"observations_startGas_nroll{num_rollouts}_lroll{rollout_length}_000000"), observations)
 
     print(observations.shape)
 

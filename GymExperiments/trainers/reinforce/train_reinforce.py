@@ -13,7 +13,8 @@ def train_reinforce(
         reinforce: Reinforce,
         dir_name: str,
         save_ith_epoch: int = 1,
-        save_videos: bool = True,
+        monitor: bool = True,
+        init_expl: float = 1e-1,
     ):
 
     checkpoint_dir = os.path.join(dir_name, "checkpoints")
@@ -22,9 +23,9 @@ def train_reinforce(
         os.makedirs(dir_name)
     os.makedirs(checkpoint_dir, exist_ok=True)
 
-    if save_videos:
-        video_dir = os.path.join(dir_name, "obs_vids")
-        os.makedirs(video_dir, exist_ok=True)
+    if monitor:
+        monitor_dir = os.path.join(dir_name, "monitor")
+        os.makedirs(monitor_dir, exist_ok=True)
     # os.makedirs(tensorboard_dir, exist_ok=True)
 
     total_rewards = np.empty(num_epochs)
@@ -32,20 +33,29 @@ def train_reinforce(
     smallest_loss = 1e32
     for epoch in tqdm.tqdm(range(num_epochs)):
 
-        max_len = 3000+5*epoch # TODO
-        expl = 0.5*np.exp(-0.001*epoch) # TODO
-        repre = 0.0001*np.exp(-0.001*epoch) # TODO
+        
+        save = True if (epoch) % save_ith_epoch == 0 else False
+        
+        max_len = 1000 #3000+5*epoch # TODO
+        expl = init_expl*np.exp(-0.005*epoch) + 1e-4# TODO
+        repre = 0.0001*np.exp(-0.001*epoch) + 1e-5 # TODO
 
         # with Pool(processes=1) as p:
         #     session = p.map(reinforce.generate_session, [max_len])
-        states, rewards, actions = reinforce.generate_session(max_len=max_len)
+
+        # if save:
+        #     # kwargs = {"monitor_dir": os.path.join(monitor_dir, f"epoch{str(epoch).zfill(6)}")}
+        #     kwargs = {"directory": monitor_dir, "resume": False, "uid": epoch}
+        # else:
+        kwargs = {}
+        states, rewards, actions = reinforce.generate_session(max_len=max_len, **kwargs)
 
         loss, loss_policy, loss_entropy, loss_repre = reinforce.train_on_session(states, actions, rewards, expl=expl, repre=repre)
 
         total_rewards[epoch] = sum(rewards)
 
-        if (epoch+1) % save_ith_epoch == 0:
 
+        if save:
             save_dict = {
                 'epoch': epoch+1,
                 'model_state_dict': reinforce.model.state_dict(),
@@ -63,9 +73,9 @@ def train_reinforce(
             if smallest_loss > loss:
                 torch.save(reinforce.model, os.path.join(dir_name, "best_model"))
 
-            if save_videos:
-                print("create video")
-                create_video(os.path.join(video_dir, f"obs_{str(epoch+1).zfill(6)}.avi"), states, fps=120)
+            # if save_videos:
+            #     print("create video")
+            #     create_video(os.path.join(video_dir, f"obs_{str(epoch+1).zfill(6)}.avi"), states, fps=120)
 
         #     writer.add_scalar('loss-val', running_loss_val, epoch)
         #     writer.add_scalar('loss-val-BCE', running_BCE_val, epoch)

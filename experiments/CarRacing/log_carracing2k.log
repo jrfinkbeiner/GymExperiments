@@ -1,0 +1,35 @@
+/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+Box(-1.0, 1.0, (3,), float32)
+<class 'gym.spaces.box.Box'>
+Track generation: 1122..1406 -> 284-tiles track
+Traceback (most recent call last):
+  File "firstTry_CarRacing.py", line 42, in <module>
+    observation = env.reset()
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/wrappers/time_limit.py", line 25, in reset
+    return self.env.reset(**kwargs)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/envs/box2d/car_racing.py", line 364, in reset
+    return self.step(None)[0]
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/envs/box2d/car_racing.py", line 376, in step
+    self.state = self.render("state_pixels")
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/envs/box2d/car_racing.py", line 399, in render
+    from gym.envs.classic_control import rendering
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/envs/classic_control/rendering.py", line 25, in <module>
+    from pyglet.gl import *
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/gl/__init__.py", line 244, in <module>
+    import pyglet.window
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/window/__init__.py", line 1880, in <module>
+    gl._create_shadow_window()
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/gl/__init__.py", line 220, in _create_shadow_window
+    _shadow_window = Window(width=1, height=1, visible=False)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/window/xlib/__init__.py", line 165, in __init__
+    super(XlibWindow, self).__init__(*args, **kwargs)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/window/__init__.py", line 591, in __init__
+    context = config.create_context(gl.current_context)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/gl/xlib.py", line 204, in create_context
+    return XlibContextARB(self, share)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/gl/xlib.py", line 314, in __init__
+    super(XlibContext13, self).__init__(config, share)
+  File "/home/jfinkbeiner/.local/lib/python3.6/site-packages/pyglet/gl/xlib.py", line 218, in __init__
+    raise gl.ContextException('Could not create GL context')
+pyglet.gl.ContextException: Could not create GL context

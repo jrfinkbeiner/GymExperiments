@@ -11,7 +11,7 @@ class Dualhead(nn.Module):
     def forward(self, inp: torch.Tensor):
         x = self.base(inp)
         x0 = self.head0(x)
-        x1 = self.head0(x)
+        x1 = self.head1(x)
 
         return x0, x1
 
@@ -28,6 +28,6 @@ class ReprDualhead(nn.Module):
         repre, repre_var = self.encoder(inp)
         x = self.middle(repre)
         x0 = self.head0(x)
-        x1 = self.head0(x)
+        x1 = self.head1(x)
 
         return x0, x1, repre, repre_var

@@ -1,0 +1,175 @@
+/home/jfinkbeiner/.local/lib/python3.6/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+Box(-1.0, 1.0, (3,), float32)
+<class 'gym.spaces.box.Box'>
+Track generation: 1060..1329 -> 269-tiles track
+[[[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]
+
+ [[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]
+
+ [[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]
+
+ ...
+
+ [[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]
+
+ [[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]
+
+ [[0 0 0]
+  [0 0 0]
+  [0 0 0]
+  ...
+  [0 0 0]
+  [0 0 0]
+  [0 0 0]]]
+<class 'numpy.ndarray'>
+(96, 96, 3)
+Track generation: 1139..1428 -> 289-tiles track
+Track generation: 1124..1409 -> 285-tiles track
+Track generation: 1218..1533 -> 315-tiles track
+Track generation: 1153..1445 -> 292-tiles track
+Track generation: 1301..1630 -> 329-tiles track
+Track generation: 1068..1339 -> 271-tiles track
+Track generation: 1358..1701 -> 343-tiles track
+Track generation: 1111..1399 -> 288-tiles track
+Track generation: 1124..1409 -> 285-tiles track
+Track generation: 1084..1359 -> 275-tiles track
+Track generation: 993..1245 -> 252-tiles track
+Track generation: 1087..1363 -> 276-tiles track
+Track generation: 995..1248 -> 253-tiles track
+Track generation: 1059..1334 -> 275-tiles track
+Track generation: 1047..1313 -> 266-tiles track
+Track generation: 1172..1469 -> 297-tiles track
+Track generation: 1130..1425 -> 295-tiles track
+Track generation: 1020..1285 -> 265-tiles track
+Track generation: 1199..1503 -> 304-tiles track
+Track generation: 1093..1378 -> 285-tiles track
+Track generation: 1074..1348 -> 274-tiles track
+Track generation: 1235..1548 -> 313-tiles track
+Track generation: 1263..1583 -> 320-tiles track
+Track generation: 1077..1350 -> 273-tiles track
+Track generation: 1153..1450 -> 297-tiles track
+Track generation: 1241..1554 -> 313-tiles track
+Track generation: 1272..1594 -> 322-tiles track
+Track generation: 950..1199 -> 249-tiles track
+Track generation: 1137..1431 -> 294-tiles track
+Track generation: 1043..1307 -> 264-tiles track
+Track generation: 1105..1385 -> 280-tiles track
+Track generation: 1156..1449 -> 293-tiles track
+Track generation: 1144..1434 -> 290-tiles track
+Track generation: 984..1241 -> 257-tiles track
+Track generation: 1151..1443 -> 292-tiles track
+Track generation: 1043..1308 -> 265-tiles track
+Track generation: 1328..1664 -> 336-tiles track
+Track generation: 1103..1383 -> 280-tiles track
+Track generation: 1072..1344 -> 272-tiles track
+Track generation: 1244..1559 -> 315-tiles track
+Track generation: 1116..1399 -> 283-tiles track
+Track generation: 1123..1408 -> 285-tiles track
+Track generation: 1190..1492 -> 302-tiles track
+Track generation: 1232..1544 -> 312-tiles track
+Track generation: 1161..1458 -> 297-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1112..1394 -> 282-tiles track
+Track generation: 1138..1434 -> 296-tiles track
+Track generation: 959..1203 -> 244-tiles track
+Track generation: 1037..1300 -> 263-tiles track
+Track generation: 1156..1449 -> 293-tiles track
+Track generation: 1183..1483 -> 300-tiles track
+Track generation: 1030..1294 -> 264-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1119..1410 -> 291-tiles track
+Track generation: 1260..1579 -> 319-tiles track
+Track generation: 1160..1454 -> 294-tiles track
+Track generation: 1183..1492 -> 309-tiles track
+Track generation: 1208..1514 -> 306-tiles track
+Track generation: 1075..1348 -> 273-tiles track
+Track generation: 1130..1418 -> 288-tiles track
+Track generation: 1124..1409 -> 285-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1165..1460 -> 295-tiles track
+Track generation: 1002..1257 -> 255-tiles track
+Track generation: 1155..1448 -> 293-tiles track
+Track generation: 1303..1632 -> 329-tiles track
+Track generation: 1422..1782 -> 360-tiles track
+Track generation: 1140..1438 -> 298-tiles track
+Track generation: 1139..1428 -> 289-tiles track
+Track generation: 1156..1459 -> 303-tiles track
+Track generation: 1207..1513 -> 306-tiles track
+Track generation: 1096..1374 -> 278-tiles track
+Track generation: 1116..1399 -> 283-tiles track
+Track generation: 1201..1505 -> 304-tiles track
+Track generation: 1144..1434 -> 290-tiles track
+Track generation: 1114..1403 -> 289-tiles track
+Track generation: 1150..1447 -> 297-tiles track
+Track generation: 1135..1423 -> 288-tiles track
+Track generation: 1257..1575 -> 318-tiles track
+Track generation: 1278..1604 -> 326-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1296..1624 -> 328-tiles track
+Track generation: 994..1250 -> 256-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1079..1353 -> 274-tiles track
+Track generation: 1119..1403 -> 284-tiles track
+Track generation: 1165..1459 -> 294-tiles track
+Track generation: 1076..1349 -> 273-tiles track
+Track generation: 972..1231 -> 259-tiles track
+Track generation: 1196..1499 -> 303-tiles track
+Track generation: 1135..1423 -> 288-tiles track
+Track generation: 1187..1488 -> 301-tiles track
+Track generation: 1223..1533 -> 310-tiles track
+Track generation: 1103..1392 -> 289-tiles track
+Track generation: 1169..1465 -> 296-tiles track
+Track generation: 1029..1294 -> 265-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1045..1314 -> 269-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1136..1424 -> 288-tiles track
+Track generation: 1021..1280 -> 259-tiles track
+Track generation: 1144..1434 -> 290-tiles track
+Track generation: 1299..1628 -> 329-tiles track
+Track generation: 1068..1343 -> 275-tiles track
+Track generation: 1132..1419 -> 287-tiles track
+Track generation: 1271..1593 -> 322-tiles track
+Track generation: 1207..1512 -> 305-tiles track
+Track generation: 1312..1644 -> 332-tiles track
+Track generation: 1018..1282 -> 264-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1092..1372 -> 280-tiles track
+retry to generate track (normal if there are not manyinstances of this message)
+Track generation: 1188..1489 -> 301-tiles track
+Track generation: 1078..1352 -> 274-tiles track
+Track generation: 1208..1514 -> 306-tiles track
+Track generation: 1160..1459 -> 299-tiles track
+Track generation: 1003..1258 -> 255-tiles track
+(100, 100, 96, 96, 3)
