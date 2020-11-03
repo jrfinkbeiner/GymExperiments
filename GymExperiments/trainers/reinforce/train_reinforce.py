@@ -50,7 +50,7 @@ def train_reinforce(
         kwargs = {}
         states, rewards, actions = reinforce.generate_session(max_len=max_len, **kwargs)
 
-        loss, loss_policy, loss_entropy, loss_repre = reinforce.train_on_session(states, actions, rewards, expl=expl, repre=repre)
+        loss, loss_policy, loss_entropy, loss_repre = reinforce.train_step(states, actions, rewards, expl=expl, repre=repre)
 
         total_rewards[epoch] = sum(rewards)
 
