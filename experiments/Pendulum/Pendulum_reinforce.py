@@ -8,8 +8,8 @@ import torch.nn as nn
 
 import gym
 
-from GymExperiments.agents.rl.policyGradient.REINFORCE.reinforce import ContinousReinforce
-from GymExperiments.trainers.reinforce.train_reinforce import train_reinforce
+from GymExperiments.agents.rl.policyGradient.reinforce import ContinousReinforce
+from GymExperiments.trainers.train_sessions import train_sessions
 from GymExperiments.architectures.multihead import Dualhead, ReprDualhead
 from GymExperiments.architectures.blocks import MLP
 from GymExperiments.util.gym_util import create_video_callable
@@ -54,7 +54,7 @@ def main():
     kwargs = {"directory": os.path.join(dir_name, "monitor"), "resume": False, "force": True, "video_callable": create_video_callable(save_ith_epoch)}
     with gym.wrappers.Monitor(env, **kwargs) as env_monitor:
     
-        reinforce = ContinousReinforce(
+        agent = ContinousReinforce(
             env=env_monitor,
             model=model,
             optimizer=optimizer,
@@ -63,9 +63,9 @@ def main():
             decoder=None,
         )
 
-        rewards = train_reinforce(
+        rewards = train_sessions(
             num_epochs=10000,
-            reinforce=reinforce,
+            agent=agent,
             dir_name=dir_name,
             save_ith_epoch=save_ith_epoch,
             monitor=False,

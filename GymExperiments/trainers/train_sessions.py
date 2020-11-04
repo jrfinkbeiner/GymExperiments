@@ -4,13 +4,14 @@ from multiprocessing import cpu_count, Pool
 import tqdm
 
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
-from GymExperiments.agents.rl.policyGradient.REINFORCE.reinforce import Reinforce 
+from GymExperiments.agents.rl.rlbase import RLBase
 from GymExperiments.util.carracing_util import create_video
 
-def train_reinforce(
+def train_sessions(
         num_epochs: int,
-        reinforce: Reinforce,
+        agent: RLBase,
         dir_name: str,
         save_ith_epoch: int = 1,
         monitor: bool = True,
@@ -26,7 +27,9 @@ def train_reinforce(
     if monitor:
         monitor_dir = os.path.join(dir_name, "monitor")
         os.makedirs(monitor_dir, exist_ok=True)
-    # os.makedirs(tensorboard_dir, exist_ok=True)
+    tensorboard_dir = os.path.join(dir_name, "tensorboard")
+    os.makedirs(tensorboard_dir, exist_ok=True)
+    writer = SummaryWriter(log_dir=tensorboard_dir, comment=dir_name)
 
     total_rewards = np.empty(num_epochs)
 
@@ -48,30 +51,29 @@ def train_reinforce(
         #     kwargs = {"directory": monitor_dir, "resume": False, "uid": epoch}
         # else:
         kwargs = {}
-        states, rewards, actions = reinforce.generate_session(max_len=max_len, **kwargs)
+        states, rewards, actions = agent.generate_session(max_len=max_len, **kwargs)
 
-        loss, loss_policy, loss_entropy, loss_repre = reinforce.train_step(states, actions, rewards, expl=expl, repre=repre)
+        loss, loss_policy, loss_entropy, loss_repre = agent.train_step(states, actions, rewards, expl=expl, repre=repre)
 
         total_rewards[epoch] = sum(rewards)
-
 
         if save:
             save_dict = {
                 'epoch': epoch+1,
-                'model_state_dict': reinforce.model.state_dict(),
-                'optimizer_state_dict': reinforce.optimizer.state_dict(),
+                'model_state_dict': agent.model.state_dict(),
+                'optimizer_state_dict': agent.optimizer.state_dict(),
                 'reward': total_rewards[epoch],
                 'loss': loss,
                 'loss_policy': loss_policy,
                 'loss_entropy': loss_entropy,
                 'loss_repre': loss_repre,
             }
-            if hasattr(reinforce, "lr_scheduler"):
-                save_dict['lr_scheduler_state_dict'] = reinforce.lr_scheduler.state_dict()
+            if hasattr(agent, "lr_scheduler"):
+                save_dict['lr_scheduler_state_dict'] = agent.lr_scheduler.state_dict()
             torch.save(save_dict, os.path.join(checkpoint_dir, f"checkpoint_{str(epoch+1).zfill(6)}.tar"))
             
             if smallest_loss > loss:
-                torch.save(reinforce.model, os.path.join(dir_name, "best_model"))
+                torch.save(agent.model, os.path.join(dir_name, "best_model"))
 
             # if save_videos:
             #     print("create video")
@@ -84,6 +86,7 @@ def train_reinforce(
         # writer.add_scalar('loss-train', running_loss, epoch)
         # writer.add_scalar('loss-train-BCE', running_BCE, epoch)
         # writer.add_scalar('loss-train-KLD', running_KLD, epoch)
+        writer.add_scalar('session-reward', total_rewards[epoch], epoch)
         print(total_rewards[epoch], loss, loss_policy, loss_entropy, loss_repre)
 
     return total_rewards

@@ -108,7 +108,7 @@ class ContinuousReinforce(ContinousRL):
         print("log_probs: ", torch.min(log_probs).item(), torch.mean(log_probs).item(), torch.max(log_probs).item(), torch.var(log_probs).item())
         print("cum_ret: ", torch.min(cumulative_returns).item(), torch.mean(cumulative_returns).item(), torch.max(cumulative_returns).item(), torch.var(cumulative_returns).item())
         print("actions: ", torch.min(actions, dim=0)[0], torch.mean(actions, dim=0), torch.max(actions, dim=0)[0], torch.var(actions, dim=0))
-        loss_policy = -torch.sum(distr.log_prob(actions) * cumulative_returns)
+        loss_policy = -torch.sum(log_probs * cumulative_returns)
         loss_entropy = -torch.sum(distr.entropy())
 
         if self.decoder is not None:

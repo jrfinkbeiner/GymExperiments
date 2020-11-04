@@ -7,12 +7,12 @@ import torch
 
 import gym
 
-from GymExperiments.agents.rl.policyGradient.REINFORCE.reinforce import ContinousReinforce
+from GymExperiments.agents.rl.policyGradient.reinforce import ContinousReinforce
 from GymExperiments.util.carracing_util import load_observations, transform_observations_torch
 from GymExperiments.architectures import instaniate_SimpleCNNVAE
 from GymExperiments.architectures.combined.from_pixels import set_up_repr_dualhead_from_pixels
 from GymExperiments.trainers.vae.train_vae import train_vae, vae_loss_fn
-from GymExperiments.trainers.reinforce.train_reinforce import train_reinforce
+from GymExperiments.trainers.train_sessions import train_sessions
 from GymExperiments.util.gym_util import create_video_callable
 
 
@@ -100,7 +100,7 @@ def main():
     
     with gym.wrappers.Monitor(env, **kwargs) as env_monitor:
 
-        reinforce = ContinousReinforce(
+        agent = ContinousReinforce(
             env=env_monitor,
             model=model,
             optimizer=optimizer,
@@ -112,12 +112,12 @@ def main():
             convert_from_action_space=convert_from_action_space,
         )
             
-        rewards = train_reinforce(
+        rewards = train_sessions(
             num_epochs=20,
-            reinforce=reinforce,
+            agent=agent,
             dir_name=dir_name,
             save_ith_epoch=1,
-            monitor=True,        
+            monitor=False,        
         )
 
     env.close()

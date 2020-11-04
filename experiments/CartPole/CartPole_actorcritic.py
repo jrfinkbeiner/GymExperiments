@@ -1,5 +1,5 @@
 import os
-import sys
+import sys  
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -8,52 +8,54 @@ import torch.nn as nn
 
 import gym
 
-from GymExperiments.agents.rl.policyGradient.reinforce import DiscreteReinforce
+from GymExperiments.agents.rl.policyGradient.actorcritic import DiscreteActorCritic
 from GymExperiments.trainers.train_sessions import train_sessions
 from GymExperiments.architectures.blocks import MLP
-from GymExperiments.util.gym_util import create_video_callable
 
-class MountainCar(nn.Module):
+
+class CartPoleACModel(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.mlp = MLP([nn.ReLU(), nn.ReLU()], [2, 64, 64])
-        self.linear = nn.Linear(64, 3)
+        self.actor = MLP([nn.ReLU(), nn.ReLU(), None], [4, 64, 64, 2])
+        self.critic = MLP([nn.ReLU(), nn.ReLU(), None], [4, 64, 64, 1])
         
     def forward(self, inp):
-        x = self.mlp(inp)
-        x = self.linear(x)
-        return x
+        action_logits =  self.actor(inp)
+        vvalues = self.critic(inp)
+        return action_logits, vvalues
 
 
 def main():
 
-    env = gym.make('MountainCar-v0')
+    env = gym.make('CartPole-v1')
 
     # print("\nstate")
     # state = env.reset()
     # print(state.shape)
     # print("\action")
     # print(env.action_space)
-    # # print(env.action_space.high)
-    # # print(env.action_space.low)
+    # print(env.action_space.high)
+    # print(env.action_space.low)
     # sys.exit()
 
 
-    save_ith_epoch = 100
-    dir_name = "./model_saves/reinforce/try0/"
+    save_ith_epoch = 500
+    dir_name = "./model_saves/actorcritic/try10k_expl/"
 
-
-
+    def create_video_callable(save_ith_episode):
+        def video_callable(episode):
+            return True if ((episode+1) % save_ith_episode == 0) else False
+        return video_callable 
 
     kwargs = {"directory": os.path.join(dir_name, "monitor"), "resume": True, "force": True, "video_callable": create_video_callable(save_ith_epoch)}
     
     with gym.wrappers.Monitor(env, **kwargs) as env_monitor:
     
-        model = MountainCar()
+        model = CartPoleACModel()
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-        agent = DiscreteReinforce(
+        agent = DiscreteActorCritic(
             env=env_monitor,
             model=model,
             optimizer=optimizer,
@@ -62,7 +64,7 @@ def main():
         )
 
         rewards = train_sessions(
-            num_epochs=1000,
+            num_epochs=10000,
             agent=agent,
             dir_name=dir_name,
             save_ith_epoch=save_ith_epoch,
@@ -74,7 +76,7 @@ def main():
     print(rewards)
     plt.figure()
     plt.plot(rewards)
-    plt.plot(np.convolve(rewards, np.ones((50,))/50, mode='same'))
+    plt.plot(np.convolve(rewards, np.ones((100,))/100, mode='same'))
     plt.show()
 
     

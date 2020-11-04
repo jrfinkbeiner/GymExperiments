@@ -19,5 +19,7 @@ class MLP(nn.Module):
     def forward(self, x: torch.Tensor):
         for ilay in range(1,self.num_layers+1):
             x = getattr(self, f"layer{ilay}")(x)
-            x = getattr(self, f"activation{ilay}")(x)
+            activation = getattr(self, f"activation{ilay}")
+            if activation is not None:
+                x = activation(x)
         return x

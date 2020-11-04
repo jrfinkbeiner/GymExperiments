@@ -8,8 +8,8 @@ import torch.nn as nn
 
 import gym
 
-from GymExperiments.agents.rl.policyGradient.REINFORCE.reinforce import DiscreteReinforce
-from GymExperiments.trainers.reinforce.train_reinforce import train_reinforce
+from GymExperiments.agents.rl.policyGradient.reinforce import DiscreteReinforce
+from GymExperiments.trainers.train_sessions import train_sessions
 from GymExperiments.architectures.blocks import MLP
 
 
@@ -57,7 +57,7 @@ def main():
         model = CartPoleModel()
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-        reinforce = DiscreteReinforce(
+        agent = DiscreteReinforce(
             env=env_monitor,
             model=model,
             optimizer=optimizer,
@@ -65,9 +65,9 @@ def main():
             exploration='proportional'
         )
 
-        rewards = train_reinforce(
+        rewards = train_sessions(
             num_epochs=10000,
-            reinforce=reinforce,
+            agent=agent,
             dir_name=dir_name,
             save_ith_epoch=save_ith_epoch,
             monitor=False,
