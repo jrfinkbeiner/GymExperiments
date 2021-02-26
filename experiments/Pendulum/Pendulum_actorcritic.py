@@ -8,14 +8,13 @@ import torch.nn as nn
 
 import gym
 
-# from GymExperiments.agents.rl.policyGradient.reinforce import ContinousReinforce
-from GymExperiments.agents.rl.policyGradient.reinforce import ContinousReinforce
+from GymExperiments.agents.rl.policyGradient.actorcritic import ContinuousActorCritic
 from GymExperiments.trainers.train_sessions import train_sessions
 from GymExperiments.architectures.multihead import Dualhead, ReprDualhead
 from GymExperiments.architectures.blocks import MLP
 from GymExperiments.util.gym_util import create_video_callable
 
-class PendulumModel(nn.Module):
+class Actor(nn.Module):
     def __init__(self):
         super().__init__()
 
@@ -29,7 +28,19 @@ class PendulumModel(nn.Module):
     def forward(self, inp):
         x0, x1 = self.dualhead(inp)
         return 2*x0, 0.3*x1
-        # return self.scale*x0, x1
+
+
+class PendulumModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        self.actor = Actor()
+        self.critic =  MLP([nn.ReLU(), nn.ReLU(), None], [3, 64, 64, 1])
+
+    def forward(self, inp):
+        action_distr = self.actor(inp)
+        vvals = self.critic(inp)
+        return action_distr, vvals
 
 
 def main():
@@ -45,17 +56,19 @@ def main():
     # print(env.action_space.low)
     # sys.exit()
 
-    model = PendulumModel()
+    save_ith_epoch = 500
+    dir_name = "./model_saves/actorcritic/try5k/"
+
+
+    model = torch.load(os.path.join(dir_name, "best_model"))
+    # model = PendulumModel()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
 
-    save_ith_epoch = 100
-    dir_name = "./model_saves/reinforce/try10k/"
-
-    kwargs = {"directory": os.path.join(dir_name, "monitor"), "resume": False, "force": True, "video_callable": create_video_callable(save_ith_epoch)}
+    kwargs = {"directory": os.path.join(dir_name, "monitor"), "resume": True, "force": True, "video_callable": create_video_callable(save_ith_epoch)}
     with gym.wrappers.Monitor(env, **kwargs) as env_monitor:
     
-        agent = ContinousReinforce(
+        agent = ContinuousActorCritic(
             env=env_monitor,
             model=model,
             optimizer=optimizer,
@@ -65,12 +78,13 @@ def main():
         )
 
         rewards = train_sessions(
-            num_epochs=10000,
+            num_epochs=5000,
             agent=agent,
             dir_name=dir_name,
             save_ith_epoch=save_ith_epoch,
             monitor=False,
-            init_expl=0.5,
+            init_expl=100,
+            start_epoch=10000,
         )
 
     env.close()

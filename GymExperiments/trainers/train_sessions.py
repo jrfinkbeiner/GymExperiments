@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 import numpy as np
 from multiprocessing import cpu_count, Pool
 import tqdm
@@ -16,6 +17,7 @@ def train_sessions(
         save_ith_epoch: int = 1,
         monitor: bool = True,
         init_expl: float = 1e-1,
+        start_epoch: Optional[int] = 0,
     ):
 
     checkpoint_dir = os.path.join(dir_name, "checkpoints")
@@ -34,13 +36,13 @@ def train_sessions(
     total_rewards = np.empty(num_epochs)
 
     smallest_loss = 1e32
-    for epoch in tqdm.tqdm(range(num_epochs)):
+    for epoch in tqdm.tqdm(range(start_epoch, start_epoch+num_epochs)):
 
         
         save = True if (epoch) % save_ith_epoch == 0 else False
         
         max_len = 1000 #3000+5*epoch # TODO
-        expl = init_expl*np.exp(-0.005*epoch) + 1e-4# TODO
+        expl = init_expl*np.exp(-0.00001*epoch) + 1e-4# TODO
         repre = 0.0001*np.exp(-0.001*epoch) + 1e-5 # TODO
 
         # with Pool(processes=1) as p:
@@ -55,14 +57,14 @@ def train_sessions(
 
         loss, loss_policy, loss_entropy, loss_repre = agent.train_step(states, actions, rewards, expl=expl, repre=repre)
 
-        total_rewards[epoch] = sum(rewards)
+        total_rewards[epoch-start_epoch] = sum(rewards)
 
         if save:
             save_dict = {
                 'epoch': epoch+1,
                 'model_state_dict': agent.model.state_dict(),
                 'optimizer_state_dict': agent.optimizer.state_dict(),
-                'reward': total_rewards[epoch],
+                'reward': total_rewards[epoch-start_epoch],
                 'loss': loss,
                 'loss_policy': loss_policy,
                 'loss_entropy': loss_entropy,
@@ -86,7 +88,7 @@ def train_sessions(
         # writer.add_scalar('loss-train', running_loss, epoch)
         # writer.add_scalar('loss-train-BCE', running_BCE, epoch)
         # writer.add_scalar('loss-train-KLD', running_KLD, epoch)
-        writer.add_scalar('session-reward', total_rewards[epoch], epoch)
-        print(total_rewards[epoch], loss, loss_policy, loss_entropy, loss_repre)
+        writer.add_scalar('session-reward', total_rewards[epoch-start_epoch], epoch)
+        print(total_rewards[epoch-start_epoch], loss, loss_policy, loss_entropy, loss_repre)
 
     return total_rewards

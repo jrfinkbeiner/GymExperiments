@@ -41,7 +41,7 @@ def main():
 
 
     save_ith_epoch = 500
-    dir_name = "./model_saves/actorcritic/try10k_expl/"
+    dir_name = "./model_saves/actorcritic/try5k_expl/"
 
     def create_video_callable(save_ith_episode):
         def video_callable(episode):
@@ -64,7 +64,7 @@ def main():
         )
 
         rewards = train_sessions(
-            num_epochs=10000,
+            num_epochs=5000,
             agent=agent,
             dir_name=dir_name,
             save_ith_epoch=save_ith_epoch,

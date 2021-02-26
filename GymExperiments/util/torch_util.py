@@ -15,3 +15,13 @@ def to_one_hot(y_tensor, ndims):
     y_one_hot = torch.zeros(
         y_tensor.size()[0], ndims).scatter_(1, y_tensor, 1)
     return y_one_hot
+
+def split_out_continous_rl(out):
+    if isinstance(out, dict):
+        return out
+    else:
+        ret_dict = {
+            "action_distributions": out[0],
+            "vvalues": out[1],
+        }
+        return ret_dict

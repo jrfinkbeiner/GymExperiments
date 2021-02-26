@@ -73,7 +73,7 @@ class DiscreteReinforce(DiscreteRL):
 
 
 
-class ContinuousReinforce(ContinousRL):
+class ContinousReinforce(ContinousRL):
 
     def train_step(self, *args, **kwargs):
         return self.train_on_session(*args, **kwargs)

@@ -121,22 +121,19 @@ class ContinuousActorCritic(ContinousRL):
         # predict logits, probas and log-probas using an agent.
         out = self.model(obs)
 
-        if isinstance(out, dict):
-            dirtr_args = out["action_distributions"]
-            vvalues = out["vvalues"]
-        else:
-            dirtr_args = out[0]
-            vvalues = out[1]
+        out_dict = torch_util.split_out_continous_rl(out)
+        dirtr_args = out_dict["action_distributions"]
+        vvalues = out_dict["vvalues"]
 
-        with torch.no_grad: # TODO correct ?
+        with torch.no_grad(): # TODO correct ?
             vvalues_prime = self.model.critic(next_obs)
 
         distr = self.distribution(*dirtr_args)
         log_probs = distr.log_prob(actions)
 
-        loss_vval = vvalues - (rewards + self.gamma * vvalues_prime )
+        loss_vval = torch.sum((vvalues - (rewards + self.gamma * vvalues_prime))**2)
 
-        with torch.no_grad: # TODO correct ? 
+        with torch.no_grad(): # TODO correct ? 
             advantage = rewards + self.gamma*vvalues_prime - vvalues
 
         # # print(actions)

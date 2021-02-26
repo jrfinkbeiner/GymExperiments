@@ -12,7 +12,6 @@ from GymExperiments.util import torch_util
 from GymExperiments.util import rl_util
 from GymExperiments.trainers.vae.train_vae import vae_loss_fn
 from GymExperiments.architectures.vae import reparameterize
-from GymExperiments.util.torch_util import to_one_hot
 
 
 def generate_epsilon_greed_discrete_action_sample(epsilon):
@@ -255,7 +254,7 @@ class ContinousRL(RLBase):
     def get_action(self, state: torch.Tensor, mode: bool = False):
         with torch.no_grad():
             out = self.model(state)
-            distribution = self.distribution(out[0], out[1])
+            distribution = self.distribution(*torch_util.split_out_continous_rl(out)["action_distributions"])
 
             if mode:
                 action_distr = self.get_mode(distribution)
